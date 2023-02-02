@@ -8,12 +8,22 @@
     <p id="message-el">Want to play a round?</p>
     <p id="cards-el">Your Cards:</p>
     <p id="sum-el">Sum:</p>
-<div class="container">
-    <button onclick="startGame()">START GAME</button>
-    <button id="hitButton">HIT</button>
-    <button id="standButton">STAND</button>
-    <button id="restartButton">RESTART</button>
-</div>
+
+    <div class="container">
+        <button onclick="startGame()">START GAME</button>
+        <div class="middle-buttons">
+          <button id="hitButton">HIT</button>
+          <button id="standButton">STAND</button>
+        </div>
+        <button id="restartButton">RESTART</button>
+    </div>
+
+    <div class="bet-container">
+        <button id="bet-el">BET</button>
+        <input type="number" id="betInput" min="1" step="1">
+        <p id="balance-el">Balance: $100</p>
+    </div>
+
     <script src="index.js"></script>
 </body>
 </html>

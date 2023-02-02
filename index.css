@@ -24,7 +24,7 @@ h1 {
 
 button {
     color: #016f32;
-    width: 150px;
+    width: 100px;
     height: 30px;
     background: goldenrod;
     padding-top: 5px;
@@ -33,4 +33,9 @@ button {
     border: none;
     border-radius: 2px;
     
+}
+
+.bet-container {
+    padding-top: 15px;
+    height: 20px;
 }

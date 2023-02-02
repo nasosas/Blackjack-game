@@ -1,45 +1,36 @@
-let playerCards = [];
-let playerSum = 0;
-let dealerCards = [];
-let dealerSum = 0;
-let hasBlackJack = false;
-let isPlayerAlive = true;
-let isDealerAlive = true;
 let message = "";
-let messageEL = document.getElementById("message-el");
-let sumEL = document.getElementById("sum-el");
-let cardsEL = document.getElementById("cards-el");
-let dealersEL = document.getElementById("dealers-el");
+const messageEL = document.getElementById("message-el");
+const sumEL = document.getElementById("sum-el");
+const cardsEL = document.getElementById("cards-el");
+const dealersEL = document.getElementById("dealers-el");
 
 const hitButton = document.getElementById("hitButton");
 const standButton = document.getElementById("standButton");
-
-hitButton.addEventListener("click", function() {
-  hit();
-});
-
-standButton.addEventListener("click", function() {
-  stand();
-});
-
-
 const restartButton = document.getElementById("restartButton");
 
+const betEl = document.querySelector("#bet-el");
+const betInputEl = document.querySelector("#betInput");
+const balanceEl = document.querySelector("#balance-el");
+
+let balance = 100;
+let bet = 0;
+
+//hit and stand buttons
+document.getElementById("hitButton").addEventListener("click", hit);
+document.getElementById("standButton").addEventListener("click", stand);
+
+//restart button functionality
 restartButton.addEventListener("click", function() {
   location.reload();
 });
 
+//random card generation
 function getRandomCard() {
-  let randomNumber = Math.floor(Math.random() * 13 + 1);
-  if (randomNumber > 10) {
-    return 10;
-  } else if (randomNumber === 1) {
-    return 11;
-  } else {
-    return randomNumber;
-  }
+  const randomNumber = Math.floor(Math.random() * 13 + 1);
+  return randomNumber > 10 ? 10 : randomNumber === 1 ? 11 : randomNumber;
 }
 
+//checking is player,dealer alive, starting with 0 cards, giving cards
 function startGame() {
   isPlayerAlive = true;
   isDealerAlive = true;
@@ -57,6 +48,7 @@ function startGame() {
   renderGame();
 }
 
+//hit logic
 function hit() {
   playerCards.push(getRandomCard());
   playerSum += playerCards[playerCards.length - 1];
@@ -66,27 +58,47 @@ function hit() {
   renderGame();
 }
 
-function stand() {
-  while (dealerSum < 17) {
-    let card = getRandomCard();
-    dealerCards.push(card);
-    dealerSum += card;
-  }
-  if (dealerSum > 21) {
-    messageEL.textContent = "You won,";
-  } else if (dealerSum > playerSum) {
-    messageEL.textContent = "You lost,";
-  } else if (dealerSum < playerSum) {
-    messageEL.textContent = "You won,";
+//display balance info, after betting removes bet value
+betEl.addEventListener("click", function() {
+  bet = parseInt(betInputEl.value);
+  if (bet > balance) {
+  alert("Insufficient balance. Please enter a lower amount.");
   } else {
-    messageEL.textContent = "Draw";
+  balance -= bet;
+  balanceEl.innerHTML = "Balance: $" + balance;
   }
+  });
+  
+  function stand() {
+  while (dealerSum < 17) {
+  let card = getRandomCard();
+  dealerCards.push(card);
+  dealerSum += card;
+  }
+  
+  if (dealerSum > 21) {
+  balance += bet * 2;
+  messageEL.textContent = "You won, dealer bust!";
+  } else if (dealerSum > playerSum) {
+  balance -= bet;
+  messageEL.textContent = "You lost.";
+  } else if (dealerSum < playerSum) {
+  balance += bet * 2;
+  messageEL.textContent = "You won!";
+  } else {
+  balance += bet;
+  messageEL.textContent = "Draw";
+  }
+  
+  balanceEl.innerHTML = "Balance: $" + balance;
+  
   let dealerCardsString = "Dealer's Cards: ";
+  
   for (let i = 0; i < dealerCards.length; i++) {
-    dealerCardsString += dealerCards[i] + " ";
+  dealerCardsString += dealerCards[i] + " ";
   }
   messageEL.textContent += "\n" + dealerCardsString;
-}
+  }
   
   function renderGame() {
     cardsEL.textContent = "Your Cards: ";
